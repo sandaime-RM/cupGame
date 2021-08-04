@@ -1,0 +1,77 @@
+body {
+    background-color: #fed;
+}
+
+.gameMain {
+    text-align: center;
+}
+
+.gameMenu {
+    text-align: center;
+    padding: 10px 40px 25px 30px;
+    margin: 20px 70px;
+
+    background-color: #edc;
+
+    border: 3px solid #fa7;
+    border-radius: 15px;
+
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+header {
+    background-color: white;
+    text-align: left;
+    padding: 10px 20px;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+header a {
+    text-decoration: none;
+    color: #666;
+}
+
+header a:hover, a:active {
+    color: #444;
+}
+
+/* ここからgameItems.htmlのオリジナル */
+
+.item {
+    background-color: #fff;
+    display: inline-block;
+    
+    border: 2px solid #c8c8c8;
+    border-radius: 10px;
+
+    padding: 10px;
+    margin: 10px
+}
+
+.item div {
+    margin: 0;
+    padding: 5px;
+}
+
+.item img {
+    margin: 5px;
+}
+
+.itemName {
+    color: black;
+    font-size: 20px;
+    display: inline-block;
+}
+
+.itemNum {
+    display: inline-block;
+    color: #777;
+    font-size: 18px;
+}
+
+.itemsBackBtn {
+    padding-top: 10px;
+    text-align: left;
+}

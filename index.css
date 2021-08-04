@@ -1,0 +1,40 @@
+.title {
+    text-align: center;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    margin: 30px 20px;
+}
+
+.title img {
+    margin-bottom: 30px;
+}
+
+.title p {
+    padding: 10px 10px
+}
+
+.title p {
+    color: #888;
+}
+
+.menu {
+    text-align: center;
+}
+
+.images > img {
+    vertical-align: bottom;
+}
+
+.outerImage {
+    padding-right: 30px;
+    text-align: right;
+}
+
+.copyright {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    color: #888;
+    font-size: 18px;
+
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+}

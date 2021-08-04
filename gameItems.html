@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+    <title>紙コップ育成ゲーム</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500&display=swap" rel="stylesheet">
+    
+    <!-- Apply CSS -->
+    <link rel="stylesheet" href="gameItems.css">
+</head>
+
+<body>
+    <header>
+        <a href="index.html" title="ホームに戻る">紙コップ育成ゲーム</a>
+    </header>
+
+    <section class="gameMain">
+
+        <img src="images/cup_sizeS.png" width="300px">
+
+    </section>
+
+    <section class="gameMenu">
+        <div style="font-size: 20px;">＜アイテムリスト＞</div>
+
+        <div class="item">
+            <img src="images/senobikku.jpg" height="90px">
+            <div>
+                <div class="itemName">セノビ〇ク</div>
+                <div class="itemNum">× 1</div>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-secondary" onclick="useItem(0)">つかう</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="images/bigMac.png" height="90px">
+            <div>
+                <div class="itemName">ビッグ〇ック</div>
+                <div class="itemNum">× 3</div>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-secondary" onclick="useItem(1)">つかう</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="images/macNaget.png" height="90px">
+            <div>
+                <div class="itemName">ナゲット</div>
+                <div class="itemNum">× 5</div>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-secondary" onclick="useItem(2)">つかう</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="images/MosBurger.jpg" height="90px">
+            <div>
+                <div class="itemName">モ〇バーガー</div>
+                <div class="itemNum">× 3</div>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-secondary" onclick="useItem(3)">つかう</button>
+            </div>
+        </div>
+
+        <div id="usingResult" style="color: #c00"></div>
+
+        <div class="itemsBackBtn">
+            <a type="button" class="btn btn-light" href="gameHome.html">もどる</a>
+        </div>
+    </section>
+
+    <script>
+        //アイテムを使うときのポイント追加処理
+        function useItem(itemNum) {
+            addPoint = 0;
+            const itemName = ["セノ〇ック", "ビッグ〇ック", "ナゲット", "モ〇バーガー"];
+
+            switch (itemNum){
+                case 0:
+                    addPoint = 50;
+                    break;
+                case 1:
+                    addPoint = 20;
+                    break;
+                case 2:
+                    addPoint = 10;
+                    break;
+                case 3:
+                    addPoint = 5;
+                    break;
+            }
+
+            var status = JSON.parse(localStorage.getItem("cupStatus"));
+            status.point += addPoint;
+
+            localStorage.setItem("cupStatus", JSON.stringify(status));
+
+            document.getElementById("usingResult").textContent = "アイテム「" + itemName[itemNum] + "」が使用されました。";
+        }
+    </script>
+    
+</body>
