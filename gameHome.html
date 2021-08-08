@@ -15,6 +15,16 @@
 
     <!-- Apply JavaScript -->
     <script src="scripts/gameHome.js"></script>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZE7ZFQP6HP"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-ZE7ZFQP6HP');
+    </script>
 </head>
 
 <body>
@@ -83,10 +93,11 @@
         <div class="status">
             <div id="statusName">「」の</div>
             <h2>ステータス</h2>
-            <div id="pointArea">成長ポイント：  /100 pt</div>
+            <div id="pointArea" style="text-align: left;">成長ポイント：  /100 pt</div>
             <div class="progress">
                 <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="pointBar"></div>
-              </div>
+            </div>
+            <div id="sizeArea" style="text-align: left; margin-top: 10px;">サイズ：<strong>S</strong></div>
         </div>
 
         <div>
@@ -102,7 +113,7 @@
         <button type="button" class="btn btn-light" onclick="startLottery()">ガチャを引く</button>
         <a type="button" class="btn btn-light" href="gameItems.html">アイテムを使う</a>
         <button type="button" class="btn btn-light" onclick="praise()">かわいがる</button>
-        <button type="button" class="btn btn-light">冷蔵庫に入れる</button>
+        <button type="button" class="btn btn-light" onclick="inFridge()">冷蔵庫に入れる</button>
         <button type="button" class="btn btn-danger" onclick="reset()">リセット</button>
     </section>
     

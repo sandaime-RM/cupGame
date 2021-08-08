@@ -4,6 +4,7 @@ var LotLastTime;
 var currentPoint;
 var points = 0;
 var status;
+var alertCode = "";
 
 //ページ「gameHome.html」を読み込み時、最初に実行
 window.onload = function() {
@@ -16,12 +17,15 @@ window.onload = function() {
     //紙コップの状態を確認
     var status = JSON.parse(localStorage.getItem("cupStatus"));
 
-    if(status == "null") {
+    if(status == "null" || status == null) {
+
         var status = {
             point : 0,
             name : "",
             size: 0,
-            voice: "大きいサイズに対してコンプレックスがあります(´・ω・`)"
+            voice: "大きいサイズに対してコンプレックスがあります(´・ω・`)",
+            fridge: false,
+            fridgeTime: null
         }
 
         localStorage.setItem("cupStatus", JSON.stringify(status));
@@ -46,7 +50,7 @@ function startLottery() {
     diffHour = diff / (60*60*1000);
 
     if(diffHour < 1) {
-        showAlert("ガチャを引く", "ガチャは1時間に一回までです！");
+        showAlert("ガチャを引く", "ガチャは1時間に一回までです！", "");
     } else {
         lottery();
     }
@@ -128,9 +132,21 @@ function doReset() {
 
 //成長ポイントなどのステータスを表示
 function dispPoint(status) {
+    var cupSize;
+    switch(status.size) {
+        case 0:
+            cupSize = "S";
+            break;
+        case 1:
+            cupSize = "M";
+        case 2:
+            cupSize = "L";
+    }
+
     document.getElementById("statusName").textContent = "「"+status.name+"」の";
     document.getElementById("pointArea").textContent = "成長ポイント：" + status.point.toString() + "/100 pt";
     document.getElementById("pointBar").style.width = status.point.toString() + "%";
+    document.getElementById("sizeArea").innerHTML = "サイズ：<strong>"+cupSize+"</strong>"
 
     document.getElementById("voiceName").textContent = "「"+status.name+"」の声";
 }
@@ -178,15 +194,17 @@ function nameAlert() {
 }
 
 //単純アラートを表示する処理
-function showAlert(title, content) {
+function showAlert(title, content, code) {
     document.getElementById("alert").style.visibility = "visible";
     document.getElementById("alertTitle").textContent = title;
     document.getElementById("alertContent").textContent = content;
+    alertCode = code;
 }
 
 //単純アラートを閉じる処理
 function hideAlert() {
     document.getElementById("alert").style.visibility = "hidden";
+    eval(alertCode);
 }
 
 //単純確認フォームを表示
@@ -204,4 +222,13 @@ function hideConfirm() {
 function confirmOK() {
     document.getElementById("confirm").style.visibility = "hidden";
     doReset();
+}
+
+//冷蔵庫に入れる
+function inFridge() {
+    var status = JSON.parse(localStorage.getItem("cupStatus"));
+    status.fridge = true;
+    localStorage.setItem("cupStatus", JSON.stringify(status));
+
+    showAlert("冷蔵庫に入れる", "冷蔵庫に紙コップを入れました。タイトル画面に戻ります。", "window.location = './index.html'");
 }
