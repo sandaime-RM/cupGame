@@ -17,6 +17,8 @@ window.onload = function() {
     //紙コップの状態を確認
     var status = JSON.parse(localStorage.getItem("cupStatus"));
 
+    var currentTime = new Date();
+
     if(status == "null" || status == null) {
 
         var status = {
@@ -25,9 +27,31 @@ window.onload = function() {
             size: 0,
             voice: "大きいサイズに対してコンプレックスがあります(´・ω・`)",
             fridge: false,
-            fridgeTime: null
+            fridgeTime: null,
+            startedTime: currentTime.getTime()
         }
 
+        localStorage.setItem("cupStatus", JSON.stringify(status));
+    } else {
+
+        if(status.fridge == true) {
+            
+            var diff = currentTime.getTime() - status.fridgeTime;
+            diffHour = diff / (60*60*1000);
+
+            if(diffHour > 24*7) {
+                gameOver(1);　//冷蔵庫に放置しすぎたパターン
+            }
+        } else {
+            var diff = currentTime.getTime() - status.startedTime;
+            diffHour = diff / (60*60*1000);
+
+            if(diffHour > 3) {
+                gameOver(2); //冷蔵庫に入れてなかったパターン
+            }
+        }
+
+        status.startedTime = currentTime.getTime();
         localStorage.setItem("cupStatus", JSON.stringify(status));
     }
 
@@ -39,6 +63,9 @@ window.onload = function() {
 
     //アイテムの所持状態を確認
     myItems = JSON.parse(localStorage.getItem("possessingItems"));
+
+    status.fridge = false;
+    localStorage.setItem("cupStatus", JSON.stringify(status));
 }
 
 //ガチャを引けるか確認する処理
@@ -92,6 +119,7 @@ function lottery() {
 //OKボタンを押した後、ガチャの結果を非表示にする
 function hideResult() {
     document.getElementById("lotteryResult").style.visibility = "hidden";
+    window.location.reload();
 }
 
 //「かわいがる」を処理
@@ -119,19 +147,15 @@ function reset() {
 }
 
 function doReset() {
-    var status = {
-        point : 0,
-        name : "",
-        size: 0,
-        voice: "大きいサイズに対してコンプレックスがあります(´・ω・`)"
-    }
-    localStorage.setItem("cupStatus", JSON.stringify(status));
+    localStorage.clear();
     
     window.location = "./index.html";
 }
 
 //成長ポイントなどのステータスを表示
 function dispPoint(status) {
+    if(status.point >= 100) evolve()
+
     var cupSize;
     switch(status.size) {
         case 0:
@@ -139,14 +163,17 @@ function dispPoint(status) {
             break;
         case 1:
             cupSize = "M";
+            break;
         case 2:
             cupSize = "L";
+            break;
     }
 
     document.getElementById("statusName").textContent = "「"+status.name+"」の";
     document.getElementById("pointArea").textContent = "成長ポイント：" + status.point.toString() + "/100 pt";
     document.getElementById("pointBar").style.width = status.point.toString() + "%";
     document.getElementById("sizeArea").innerHTML = "サイズ：<strong>"+cupSize+"</strong>"
+    document.getElementById("voiceArea").textContent = status.voice;
 
     document.getElementById("voiceName").textContent = "「"+status.name+"」の声";
 }
@@ -228,7 +255,60 @@ function confirmOK() {
 function inFridge() {
     var status = JSON.parse(localStorage.getItem("cupStatus"));
     status.fridge = true;
+
+    var currentTime = new Date();
+    status.fridgeTime = currentTime.getTime();
+    console.log(status.fridgeTime);
+
     localStorage.setItem("cupStatus", JSON.stringify(status));
 
     showAlert("冷蔵庫に入れる", "冷蔵庫に紙コップを入れました。タイトル画面に戻ります。", "window.location = './index.html'");
+}
+
+//サイズアップ
+function evolve() {
+    var status = JSON.parse(localStorage.getItem("cupStatus"));
+    var alertContent;
+    status.size ++;
+    status.point = 0;
+    localStorage.setItem("cupStatus", JSON.stringify(status));
+
+    switch(status.size) {
+        case 1:
+            alertContent = "SサイズからMサイズになりました！次はLサイズを目指そう！";
+            break;
+        
+        case 2:
+            alertContent = "MサイズからLサイズになりました！おめでとうございます！！次は・・・？";
+            break;
+
+        default:
+            alertContent = "エラー（Number status.size is too large.）";
+    }
+
+    showAlert("サイズアップ！", alertContent, "window.location.reload()");
+}
+
+function gameOver() {
+    showAlert("ゲームオーバー", "コップを冷蔵庫に入れましたか？冷蔵庫に入れたまま何日も放置していませんでしたか？紙コップは体調を崩して病気になってしまったようです…。", "localStorage.clear(); window.location = './index.html'");
+}
+
+//ゲームオーバー
+function gameOver(type) {
+    var text;
+
+    switch(type) {
+        case 1:
+            text = "冷蔵庫に入れたままずっと放置され続けて、流石に1週間経ってもう力尽きたみたい…。";
+            break;
+        
+        case 2:
+            text = "冷蔵庫に入れずに何時間も放置してた？暑くてもうダメになっちゃったみたい…";
+            break;
+        
+        default:
+            text = "エラー (Unexpected number of gameover-type)";
+    }
+
+    showAlert("ゲームオーバー", text, "localStorage.clear(); window.location.href ='./index.html';");
 }
