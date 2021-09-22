@@ -25,6 +25,20 @@
 </head>
 
 <body>
+    <!-- 単純アラート -->
+    <div id="alert" class="resultBack">
+        <div class="resultWindow">
+            <h2 id="alertTitle"></h2>
+            <p id="alertContent" style="font-size: 18px;"></p>
+            
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-primary" onclick="hideAlert()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 常時表示コンテンツ -->
+
     <header>
         <a href="index.html" title="ホームに戻る">紙コップ育成ゲーム</a>
     </header>
@@ -42,7 +56,7 @@
             <img src="images/senobikku.jpg" height="90px">
             <div>
                 <div class="itemName">セノビ〇ク</div>
-                <div class="itemNum">× 1</div>
+                <div class="itemNum" id="itemNum0">× </div>
             </div>
             <div style="text-align: right;">
                 <button type="button" class="btn btn-secondary" onclick="useItem(0)">つかう</button>
@@ -53,7 +67,7 @@
             <img src="images/bigMac.png" height="90px">
             <div>
                 <div class="itemName">ビッグ〇ック</div>
-                <div class="itemNum">× 3</div>
+                <div class="itemNum" id="itemNum1">× </div>
             </div>
             <div style="text-align: right;">
                 <button type="button" class="btn btn-secondary" onclick="useItem(1)">つかう</button>
@@ -64,7 +78,7 @@
             <img src="images/macNaget.png" height="90px">
             <div>
                 <div class="itemName">ナゲット</div>
-                <div class="itemNum">× 5</div>
+                <div class="itemNum" id="itemNum2">× </div>
             </div>
             <div style="text-align: right;">
                 <button type="button" class="btn btn-secondary" onclick="useItem(2)">つかう</button>
@@ -75,7 +89,7 @@
             <img src="images/MosBurger.jpg" height="90px">
             <div>
                 <div class="itemName">モ〇バーガー</div>
-                <div class="itemNum">× 3</div>
+                <div class="itemNum" id="itemNum3">× </div>
             </div>
             <div style="text-align: right;">
                 <button type="button" class="btn btn-secondary" onclick="useItem(3)">つかう</button>
@@ -90,12 +104,37 @@
     </section>
 
     <script>
-        //アイテムを使うときのポイント追加処理
-        function useItem(itemNum) {
+        var itemNum = [document.getElementById("itemNum0"), document.getElementById("itemNum1"), document.getElementById("itemNum2"), document.getElementById("itemNum3")];
+
+        window.onload = function() {
+            //紙コップの状態を確認
+            var status = JSON.parse(localStorage.getItem("cupStatus")); 
+
+            //各アイテムの数を読込＆表示
+            for(var i=0; i<4; i++) {
+                itemNum[i].textContent = "× " + String(status.items[i]);
+            }
+        }
+
+        //アイテムを使う処理
+        function useItem(itemSelected) {
+            var status = JSON.parse(localStorage.getItem("cupStatus"));
+
+            //アイテムは残っているか確認
+            if(status.items[itemSelected] <= 0) {
+                console.log("!!");
+                showAlert("アイテムを使う", "このアイテムはもう残っていません。ガチャで獲得して使おう！", "");
+                return;
+            }
+
+            //アイテムの数を１減らす
+            status.items[itemSelected] --;
+
+            //ポイント追加処理
             addPoint = 0;
             const itemName = ["セノ〇ック", "ビッグ〇ック", "ナゲット", "モ〇バーガー"];
 
-            switch (itemNum){
+            switch (itemSelected){
                 case 0:
                     addPoint = 50;
                     break;
@@ -110,12 +149,26 @@
                     break;
             }
 
-            var status = JSON.parse(localStorage.getItem("cupStatus"));
             status.point += addPoint;
 
+            //ステータスを保存
             localStorage.setItem("cupStatus", JSON.stringify(status));
 
-            document.getElementById("usingResult").textContent = "アイテム「" + itemName[itemNum] + "」が使用されました。";
+            showAlert("アイテムを使う", "アイテム「" + itemName[itemSelected] + "」が使用されました。ポイントは+" + String(addPoint), "window.location.reload();")
+        }
+
+        //単純アラートを表示する処理
+        function showAlert(title, content, code) {
+            document.getElementById("alert").style.visibility = "visible";
+            document.getElementById("alertTitle").textContent = title;
+            document.getElementById("alertContent").textContent = content;
+            alertCode = code;
+        }
+
+        //単純アラートを閉じる処理
+        function hideAlert() {
+            document.getElementById("alert").style.visibility = "hidden";
+            eval(alertCode);
         }
     </script>
     

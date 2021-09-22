@@ -16,6 +16,7 @@ window.onload = function() {
 
     //紙コップの状態を確認
     var status = JSON.parse(localStorage.getItem("cupStatus"));
+    console.log(status);
 
     var currentTime = new Date();
 
@@ -28,7 +29,8 @@ window.onload = function() {
             voice: "大きいサイズに対してコンプレックスがあります(´・ω・`)",
             fridge: false,
             fridgeTime: null,
-            startedTime: currentTime.getTime()
+            startedTime: currentTime.getTime(),
+            items: [0, 0, 0, 0]
         }
 
         localStorage.setItem("cupStatus", JSON.stringify(status));
@@ -87,26 +89,49 @@ function startLottery() {
 function lottery() {
     //抽選とそれに応じた結果の表示
     lotteryNum = Math.floor(Math.random()*5);
+    var resultText = "";
+    var resultImg = "";
+    var itemNum = 0;
 
     switch(lotteryNum) {
         case 0, 1:
-            console.log("はずれ");
+            resultText = "はずれ";
+            resultImg = "orange.jpg";
+            itemNum = null;
         
         case 2:
-            console.log("セノビ〇ク");
+            resultText = "セノビ〇ク";
+            resultImg = "senobikku.jpg";
+            itemNum = 0;
         
         case 3:
-            console.log("タオル");
+            resultText = "ビッ〇マック";
+            resultImg = "bigMac.png";
+            itemNum = 1;
 
         case 4:
-            console.log("高級ストロー");
+            resultText = "ナゲット";
+            resultImg = "macNaget.png";
+            itemNum = 2;
         
         case 5:
-            console.log("音楽プレーヤー")
+            resultText = "モ〇バーガー";
+            resultImg = "MosBurger.jpg";
+            itemNum = 3;
     }
 
+    //結果を表示
     var resultWindow = document.getElementById("lotteryResult");
     resultWindow.style.visibility = "visible";
+    document.getElementById("lotteryText").textContent = resultText;
+    document.getElementById("lotteryImg").src = "images/" + resultImg;
+
+    //アイテムの数を追加
+    if(itemNum != null) {
+        var status = JSON.parse(localStorage.getItem("cupStatus"));
+        status.items[itemNum] ++;
+        localStorage.setItem("cupStatus", JSON.stringify(status));
+    }
 
     //ガチャをした時刻をlocalStorageに記録（「1時間に1回」を判定するため）
     if(!lotteryResult) {
@@ -270,8 +295,7 @@ function evolve() {
     var status = JSON.parse(localStorage.getItem("cupStatus"));
     var alertContent;
     status.size ++;
-    status.point = 0;
-    localStorage.setItem("cupStatus", JSON.stringify(status));
+    // status.point = 0;
 
     switch(status.size) {
         case 1:
@@ -286,7 +310,9 @@ function evolve() {
             alertContent = "エラー（Number status.size is too large.）";
     }
 
-    showAlert("サイズアップ！", alertContent, "window.location.reload()");
+    showAlert("サイズアップ！", alertContent, "var status = JSON.parse(localStorage.getItem('cupStatus'));status.size ++;status.point = 0;localStorage.setItem('cupStatus', JSON.stringify(status));");
+    
+    console.log(status);
 }
 
 function gameOver() {
