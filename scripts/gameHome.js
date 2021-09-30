@@ -98,26 +98,31 @@ function lottery() {
             resultText = "はずれ";
             resultImg = "orange.jpg";
             itemNum = null;
+            break;
         
         case 2:
             resultText = "セノビ〇ク";
             resultImg = "senobikku.jpg";
             itemNum = 0;
+            break;
         
         case 3:
             resultText = "ビッ〇マック";
             resultImg = "bigMac.png";
             itemNum = 1;
+            break;
 
         case 4:
             resultText = "ナゲット";
             resultImg = "macNaget.png";
             itemNum = 2;
+            break;
         
         case 5:
             resultText = "モ〇バーガー";
             resultImg = "MosBurger.jpg";
             itemNum = 3;
+            break;
     }
 
     //結果を表示
